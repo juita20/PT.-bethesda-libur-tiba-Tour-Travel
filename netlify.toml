@@ -1,0 +1,4 @@
+﻿[build]
+  base = "ClientApp"
+  command = "npm run build"
+  publish = "build"
