@@ -684,7 +684,6 @@ export class Home extends Component {
 
         let updatedForm = { ...formPemesananUmum, [name]: value };
 
-        // Jika tanggal pergi diubah, pastikan tanggal pulang tidak mendahului tanggal pergi yang baru
         if (name === 'tanggal' && updatedForm.jenisPerjalanan === 'Pulang Pergi') {
             if (updatedForm.tanggalPulang < value) {
                 updatedForm.tanggalPulang = value;
@@ -772,13 +771,11 @@ export class Home extends Component {
 
         const todayStr = new Date().toISOString().split('T')[0];
 
-        // VALIDASI KEAMANAN: Tanggal pergi tidak boleh di masa lalu
         if (tanggal < todayStr) {
             alert('❌ Kesalahan Tanggal: Tanggal Keberangkatan (Pergi) tidak boleh di masa lalu!');
             return;
         }
 
-        // VALIDASI KEAMANAN: Tanggal pulang tidak boleh lebih awal dari tanggal pergi
         if (jenisPerjalanan === 'Pulang Pergi' && tanggalPulang < tanggal) {
             alert('❌ Kesalahan Tanggal: Tanggal Pulang tidak boleh lebih awal dari Tanggal Keberangkatan (Pergi)!');
             return;
@@ -814,7 +811,6 @@ export class Home extends Component {
     render() {
         const { halamanAktif, daftarDomestik, daftarInternasional, tourPilihan, formPemesananUmum, showLoginModal, authMode, selectedProvider, authForm, userLogin } = this.state;
 
-        // Mendapatkan tanggal hari ini secara dinamis dengan format YYYY-MM-DD
         const todayDate = new Date().toISOString().split('T')[0];
 
         const listLayanan = [
@@ -861,7 +857,7 @@ export class Home extends Component {
                     </div>
                 </div>
 
-                {/* MODAL / POP-UP LOGIN TRIP.COM & GOOGLE CHOOSER */}
+                {/* MODAL / POP-UP LOGIN */}
                 {showLoginModal && (
                     <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '15px' }}>
                         <div style={{ backgroundColor: 'white', borderRadius: '16px', width: '450px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', padding: '35px 30px', position: 'relative', textAlign: 'center' }}>
@@ -892,7 +888,6 @@ export class Home extends Component {
                                         <div style={{ flex: 1, borderBottom: '1px solid #ddd' }}></div>
                                     </div>
 
-                                    {/* TOMBOL SOSIAL MEDIA DENGAN IKON & WARNA ASLI */}
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '25px' }}>
                                         <div onClick={() => this.handleSocialClick('Google')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '12px', borderRadius: '8px', border: '1px solid #dadce0', cursor: 'pointer', backgroundColor: 'white', color: '#3c4043', fontWeight: 'bold', fontSize: '0.95rem', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
                                             <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" /><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.15v3.14C3.15 21.37 7.23 24 12 24z" /><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.39-1.49-.39-2.24s.14-1.52.39-2.24V6.62H1.15C.42 8.1 0 9.77 0 12s.42 3.9 1.15 5.38l4.12-3.14z" /><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.15 2.63 1.15 6.62l4.12 3.14c.95-2.85 3.6-4.96 6.73-4.96z" /></svg>
@@ -912,7 +907,6 @@ export class Home extends Component {
                                 </>
                             )}
 
-                            {/* PILIH AKUN GOOGLE CHOOSER */}
                             {authMode === 'googleAccountChooser' && (
                                 <div style={{ textAlign: 'left', marginTop: '10px' }}>
                                     <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>Lanjutkan ke <b>PT. Bethesda Libur Tiba</b></p>
@@ -939,7 +933,6 @@ export class Home extends Component {
                                 </div>
                             )}
 
-                            {/* FORM INPUT PASSWORD UNTUK APPLE / FACEBOOK */}
                             {authMode === 'socialInput' && (
                                 <form onSubmit={this.handleSocialLoginSubmit} style={{ textAlign: 'left', marginTop: '20px' }}>
                                     <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: '15px' }}>Silakan masukkan kredensial akun <b>{selectedProvider}</b> Anda:</p>
@@ -1156,7 +1149,6 @@ export class Home extends Component {
                                 </div>
                                 <div style={{ flex: 1, minWidth: '220px' }}>
                                     <label style={{ fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Tanggal Pergi (Keberangkatan)</label>
-                                    {/* Atribut min={todayDate} memastikan tanggal di masa lalu (seperti bulan Agustus) terkunci otomatis */}
                                     <input type="date" name="tanggal" min={todayDate} value={formPemesananUmum.tanggal} onChange={this.handleFormUmumChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
                                 </div>
                             </div>
@@ -1164,7 +1156,6 @@ export class Home extends Component {
                             {formPemesananUmum.jenisPerjalanan === 'Pulang Pergi' && (
                                 <div style={{ marginBottom: '15px' }}>
                                     <label style={{ fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '5px', color: '#1976d2' }}>📅 Tanggal Pulang</label>
-                                    {/* Atribut min={formPemesananUmum.tanggal} mengunci tanggal pulang agar tidak bisa mendahului tanggal pergi */}
                                     <input type="date" name="tanggalPulang" min={formPemesananUmum.tanggal} value={formPemesananUmum.tanggalPulang} onChange={this.handleFormUmumChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #1976d2', boxSizing: 'border-box', backgroundColor: '#e3f2fd' }} />
                                 </div>
                             )}
@@ -1204,7 +1195,7 @@ export class Home extends Component {
                     </div>
                 )}
 
-                {/* FOOTER INFORMASI KONTAK & ALAMAT */}
+                {/* FOOTER */}
                 <div style={{ maxWidth: '1000px', margin: '60px auto 0 auto', padding: '25px 30px', backgroundColor: '#1e3c72', color: 'white', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
                     <div>
                         <h4 style={{ margin: '0 0 8px 0', fontSize: '1rem', color: '#ff9800' }}>More Information :</h4>
